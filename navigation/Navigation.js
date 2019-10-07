@@ -16,7 +16,6 @@ import HistoryScreen from '../screens/History';
 import RandomScreen from '../screens/Random';
 import TopsScreen from '../screens/Tops';
 
-
 const Navigation = props => {
     return (
         <AppContainer ></AppContainer>

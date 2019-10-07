@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
 const DrawerMenuItem = (props) => {
-    const { iconName, onPress, name, dropdown, divider } = props;
+    const { iconName, onPress, name, dropdown, divider, expandedIcon } = props;
 
     const TouchableCmp = Platform.OS === 'android' && Platform.Version >= 21 ? TouchableNativeFeedback : TouchableOpacity;
     const background = Platform.OS === 'android' && Platform.Version >= 21 ? TouchableNativeFeedback.Ripple('white') : null;
@@ -22,7 +22,7 @@ const DrawerMenuItem = (props) => {
                 </View>
                 {dropdown ? (
                     <View style={[styles.itemColumn, { position: 'absolute', right: 20, top: 10 }]}>
-                        <Ionicons name={Platform.OS === 'android' ? 'md-arrow-dropdown' : 'ios-arrow-dropdown'}
+                        <Ionicons name={Platform.OS === 'android' ? 'md-' + expandedIcon : 'ios-' + expandedIcon}
                             size={25} color={'white'} />
                     </View>
                 ) : null}

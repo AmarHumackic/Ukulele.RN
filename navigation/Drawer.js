@@ -47,21 +47,21 @@ export default class Drawer extends Component {
                     <DrawerMenuItem iconName='bonfire' onPress={() => this.navigateTo(this.props.items[1].routeName)} name='Tops' />
                     <DrawerMenuItem iconName='locate' onPress={() => {
                         this.setState({ expanded: !this.state.expanded });
-                    }} name='Filter Tabs By...' dropdown />
+                    }} name='Filter Tabs By...' dropdown expandedIcon={this.state.expanded ? 'arrow-dropup' : 'arrow-dropdown'} />
                     {this.state.expanded ? (
                         <View>
                             <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
-                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40, paddingVertical: 5 }]}>
                                     <Text style={styles.itemText}>Country</Text>
                                 </View>
                             </TouchableCmp>
                             <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
-                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40, paddingVertical: 5 }]}>
                                     <Text style={styles.itemText}>Genre</Text>
                                 </View>
                             </TouchableCmp>
                             <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
-                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40, paddingVertical: 5 }]}>
                                     <Text style={styles.itemText}>Difficulty</Text>
                                 </View>
                             </TouchableCmp>

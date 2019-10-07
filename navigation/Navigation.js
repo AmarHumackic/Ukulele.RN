@@ -30,7 +30,7 @@ const defaultStackNavOptions = {
     headerTintColor: Platform.OS === 'android' ? Colors.accentColor : Colors.primaryColor
 };
 
-const CountryTracksNavigator = createStackNavigator(
+const FreshTabsNavigator = createStackNavigator(
     {
         FreshTabs: { screen: FreshTabsScreen },
         History: { screen: HistoryScreen },
@@ -101,7 +101,7 @@ const LoginNavigator = createStackNavigator(
 const MainNavigator = createDrawerNavigator(
     {
         FreshTabs: {
-            screen: FreshTabsScreen,
+            screen: FreshTabsNavigator,
             navigationOptions: {
                 drawerLabel: 'Music Service',
                 drawerIcon: () => (
@@ -119,7 +119,7 @@ const MainNavigator = createDrawerNavigator(
             }
         },
         Tops: {
-            screen: TopsScreen,
+            screen: CountryLovedTabNavigator,
             params: { temp: 1 },
             navigationOptions: {
                 drawerLabel: 'Logout',

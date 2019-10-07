@@ -1,25 +1,33 @@
 import React, { Component } from 'react';
 import {
-    View, Text, TouchableHighlight, StyleSheet, SafeAreaView, ScrollView,
-    TouchableOpacity, TouchableNativeFeedback, Platform, Fragment
+    View, Text, StyleSheet, SafeAreaView, ScrollView,
+    TouchableOpacity, TouchableNativeFeedback, Platform, Image, Linking
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
+import DrawerMenuItem from './DrawerMenuItem';
 
 export default class Drawer extends Component {
     state = {
         expanded: false
     }
+    componentDidMount() {
+        console.log(this.props.items);
+    }
+
+    navigateTo = (routeName) => {
+        this.props.navigation.navigate(routeName);
+        this.props.navigation.closeDrawer();
+    }
 
     render() {
-        let TouchableCmp = TouchableOpacity;
+        const TouchableCmp = Platform.OS === 'android' && Platform.Version >= 21 ? TouchableNativeFeedback : TouchableOpacity;
+        const background = Platform.OS === 'android' && Platform.Version >= 21 ? TouchableNativeFeedback.Ripple('white') : null;
 
-        if (Platform.OS === 'android' && Platform.Version >= 21) {
-            TouchableCmp = TouchableNativeFeedback;
-        }
         return (
             <SafeAreaView style={styles.parent}>
-                <ScrollView>
+                <ScrollView keyboardShouldPersistTaps='always'>
                     <View style={styles.headerContainer}>
                         <Text style={styles.mainText}>YOU ARE NOT LOGGED IN!</Text>
                         <View>
@@ -35,68 +43,54 @@ export default class Drawer extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-                    <TouchableNativeFeedback>
-                        <View style={styles.itemContainer}>
-                            <View style={styles.itemColumn}>
-                                <Ionicons name={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-                                    size={25} color={'white'} />
-                            </View>
-                            <View style={styles.itemColumn}>
-                                <Text style={styles.itemText}>Fresh Tabs</Text>
-                            </View>
-                        </View>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback>
-                        <View style={styles.itemContainer}>
-                            <View style={styles.itemColumn}>
-                                <Ionicons name={Platform.OS === 'android' ? 'md-bonfire' : 'ios-bonfire'}
-                                    size={25} color={'white'} />
-                            </View>
-                            <View style={styles.itemColumn}>
-                                <Text style={styles.itemText}>Tops</Text>
-                            </View>
-                        </View>
-                    </TouchableNativeFeedback>
-                    <TouchableOpacity style={styles.itemContainer} onPress={() => this.setState({ expanded: !this.state.expanded })}>
-                        <View style={styles.itemColumn}>
-                            <Ionicons name={Platform.OS === 'android' ? 'md-locate' : 'ios-locate'}
-                                size={25} color={'white'} />
-                        </View>
-                        <View style={styles.itemColumn}>
-                            <Text style={styles.itemText}>Filter Tabs By...</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <DrawerMenuItem iconName='calendar' onPress={() => this.navigateTo(this.props.items[0].routeName)} name='Fresh Tabs' />
+                    <DrawerMenuItem iconName='bonfire' onPress={() => this.navigateTo(this.props.items[1].routeName)} name='Tops' />
+                    <DrawerMenuItem iconName='locate' onPress={() => {
+                        this.setState({ expanded: !this.state.expanded });
+                    }} name='Filter Tabs By...' dropdown />
                     {this.state.expanded ? (
                         <View>
-                            <TouchableOpacity style={{ paddingLeft: 40, height: 30 }}>
-                                <View style={{ justifyContent: 'center' }}>
+                            <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
                                     <Text style={styles.itemText}>Country</Text>
                                 </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ paddingLeft: 40, height: 30 }}>
-                                <View style={{ justifyContent: 'center' }}>
+                            </TouchableCmp>
+                            <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
                                     <Text style={styles.itemText}>Genre</Text>
                                 </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ paddingLeft: 40, height: 30 }}>
-                                <View style={{ justifyContent: 'center' }}>
+                            </TouchableCmp>
+                            <TouchableCmp background={background} style={{ width: '100%', height: 30 }}>
+                                <View style={[styles.itemColumn, { paddingLeft: 40 }]}>
                                     <Text style={styles.itemText}>Difficulty</Text>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableCmp>
                         </View>
                     ) : null}
-                    <TouchableOpacity style={styles.itemContainer} onPress={() => this.setState({ expanded: !this.state.expanded })}>
-                        <View style={styles.itemColumn}>
-                            <Ionicons name={Platform.OS === 'android' ? 'md-time' : 'ios-time'}
-                                size={25} color={'white'} />
+                    <DrawerMenuItem iconName='time' onPress={() => this.navigateTo(this.props.items[2].routeName)} name='History' />
+                    <Text style={styles.sectionText}>My Lists</Text>
+                    <DrawerMenuItem iconName='bookmarks' onPress={() => console.log('pressed')} name='Songbook' />
+                    <DrawerMenuItem iconName='star' onPress={() => console.log('pressed')} name='Favorite Artists' />
+                    <Text style={styles.sectionText}>Extras</Text>
+                    <DrawerMenuItem iconName='musical-notes' onPress={() => console.log('pressed')} name='Strumming Patterns' />
+                    <DrawerMenuItem iconName='grid' onPress={() => console.log('pressed')} name='Chord Charts' />
+                    <DrawerMenuItem iconName='resize' onPress={() => console.log('pressed')} name='Tuner' divider />
+                    <Text style={[styles.sectionText, { paddingTop: 10 }]}>Other</Text>
+                    <DrawerMenuItem iconName='remove-circle' onPress={() => console.log('pressed')} name='Remove circle' />
+                    <DrawerMenuItem iconName='settings' onPress={() => console.log('pressed')} name='Settings' />
+                    <DrawerMenuItem iconName='send' onPress={() => console.log('pressed')} name='Feedback and Support' />
+                    <DrawerMenuItem iconName='information-circle' onPress={() => console.log('pressed')} name='About' />
+                    <TouchableCmp onPress={() => Linking.openURL('https://www.spotify.com/')}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={styles.footerText}>Artist images and album covers powered by</Text>
+                            <View style={styles.logoContainer}>
+                                <Image source={require('../assets/spotify.jpeg')} style={styles.logo} />
+                            </View>
                         </View>
-                        <View style={styles.itemColumn}>
-                            <Text style={styles.itemText}>History</Text>
-                        </View>
-                    </TouchableOpacity>
+                    </TouchableCmp>
+                    <Text style={[styles.footerText, { paddingTop: 20 }]}>version 4.2.1-68</Text>
                 </ScrollView>
-            </SafeAreaView >
+            </SafeAreaView>
         )
     }
 }
@@ -113,7 +107,7 @@ const styles = StyleSheet.create({
         height: 200,
         backgroundColor: '#000000',
         alignItems: 'center',
-        paddingTop: 20,
+        paddingTop: Platform.OS === 'ios' ? 10 : 20,
         justifyContent: 'space-between'
     },
     mainText: {
@@ -128,18 +122,19 @@ const styles = StyleSheet.create({
     headerButtonContainer: {
         flexDirection: 'row',
         paddingBottom: 15,
+        justifyContent: 'center',
         width: '100%'
     },
     loginButton: {
         width: '45%',
         backgroundColor: '#3d7bff',
-        marginHorizontal: '2%',
+        marginRight: '2%',
         borderRadius: 8
     },
     signupButton: {
         width: '45%',
         backgroundColor: '#ffdd1f',
-        marginHorizontal: '2%',
+        marginLeft: '2%',
         borderRadius: 8
     },
     buttonText: {
@@ -154,58 +149,34 @@ const styles = StyleSheet.create({
         paddingLeft: 16
     },
     itemColumn: {
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     itemText: {
         paddingLeft: 20,
         color: 'white'
     },
-
-
-
-
-    touchableHighlightStyle: {
-        height: 48,
-        alignSelf: 'stretch',
-        alignItems: 'flex-start',
-        paddingLeft: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#dddddd',
+    sectionText: {
+        paddingLeft: 10,
+        color: Colors.primaryColor,
+        fontWeight: 'bold'
     },
-    textStyle: {
-        height: 48,
-        alignSelf: 'stretch',
-        alignItems: 'center',
-        textAlignVertical: 'center',
-        color: 'white'
+    dividerLine: {
+        borderBottomColor: '#bbbfbf',
+        borderBottomWidth: 0.5
     },
-    headingTextStyle: {
-        fontSize: 20,
-        height: 48,
-        fontWeight: 'bold',
-        paddingTop: 12,
-        backgroundColor: 'green',
-        alignSelf: 'stretch',
-        paddingStart: 16
+    footerText: {
+        paddingTop: 15,
+        textAlign: 'center',
+        color: '#567e85',
+        fontSize: 10
+    },
+    logoContainer: {
+        paddingTop: 10,
+    },
+    logo: {
+        width: 60,
+        height: 60,
+        borderRadius: 30
     }
 
 });
-
-const DrawerMenuItem = (props) => {
-
-    const { iconName, iconType, text, onPress } = props;
-
-    return (
-        <TouchableHighlight style={styles.touchableHighlightStyle}
-            onPress={onPress}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                {/* <Icon
-                    name={iconName}
-                    type={iconType}
-                    iconStyle={{ paddingRight: 16 }}
-                /> */}
-                <Text style={styles.textStyle}>{text}</Text>
-            </View>
-        </TouchableHighlight>
-    )
-}
